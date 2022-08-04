@@ -2605,7 +2605,10 @@ foldRoundUpIntegerWithPow2Alignment(SelectInst &SI,
   const APInt *BiasCst, *HighBitMaskCst;
   if (!match(XBiasedHighBits,
              m_And(m_Add(m_Specific(X), m_APIntAllowUndef(BiasCst)),
-                   m_APIntAllowUndef(HighBitMaskCst))))
+                   m_APIntAllowUndef(HighBitMaskCst))) &&
+      !match(XBiasedHighBits,
+             m_Add(m_And(m_Specific(X), m_APIntAllowUndef(HighBitMaskCst)),
+                   m_APIntAllowUndef(BiasCst))))
     return nullptr;
 
   if (!LowBitMaskCst->isMask())
